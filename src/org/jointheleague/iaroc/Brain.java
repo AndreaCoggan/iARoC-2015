@@ -1,5 +1,8 @@
 package org.jointheleague.iaroc;
 
+import android.os.SystemClock;
+import android.provider.Settings;
+
 import ioio.lib.api.IOIO;
 import ioio.lib.api.exception.ConnectionLostException;
 import org.wintrisstech.irobot.ioio.IRobotCreateAdapter;
@@ -9,7 +12,7 @@ import org.jointheleague.iaroc.sensors.UltraSonicSensors;
 public class Brain extends IRobotCreateAdapter {
     private final Dashboard dashboard;
     public UltraSonicSensors sonar;
-
+    int dist = 0;
     public Brain(IOIO ioio, IRobotCreateInterface create, Dashboard dashboard)
             throws ConnectionLostException {
         super(create);
@@ -27,5 +30,12 @@ public class Brain extends IRobotCreateAdapter {
 
     }
     /* This method is called repeatedly. */
-    public void loop() throws ConnectionLostException {}
+    public void loop() throws ConnectionLostException {
+        driveDirect(300,300);
+        SystemClock.sleep(2000);
+        driveDirect(0,0);
+        SystemClock.sleep(1000);
+        readSensors(SENSORS_DISTANCE);
+        dashboard.log("" + getDistance());
+    }
 }
